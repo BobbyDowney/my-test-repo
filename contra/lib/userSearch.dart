@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class UserSearchScreen extends StatefulWidget {
-  UserSearchScreen() : Super();
+  UserSearchScreen({Key? key}) : super(key: key);
 
   @override
   _UserSearchScreenState createState() => _UserSearchScreenState();
