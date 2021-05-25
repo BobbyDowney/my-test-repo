@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'navigationBar.dart';
 
 class SignInScreen extends StatefulWidget {
   SignInScreen({Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ class _SignInScreenState extends State<SignInScreen>{
           mainAxisAlignment: MainAxisAlignment.center,
           children: [Text('Sign in page')]
         )
-      )
+      ), bottomNavigationBar: NavigationBar(0)
     );
   }
 }

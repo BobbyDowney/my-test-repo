@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'navigationBar.dart';
 
 class ProfileScreen extends StatefulWidget {
   ProfileScreen({Key? key}) : super(key: key);
@@ -16,7 +17,9 @@ class _ProfileScreenState extends State<ProfileScreen>{
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [Text('Profile page')]
             )
-        )
+        ),
+        bottomNavigationBar: NavigationBar(2)
     );
   }
 }
+
