@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'navigationBar.dart';
 import 'route_generator.dart';
 
@@ -54,7 +55,7 @@ class _LoginPageState extends State<LoginPage>{
                       return 'Please type your Password';
                     }
                   },
-                  onSaved: (input) => _email = input ?? '',
+                  onSaved: (input) => _password = input ?? '',
                   decoration: InputDecoration(
                       labelText: 'Password'
                   ),
@@ -62,7 +63,7 @@ class _LoginPageState extends State<LoginPage>{
               ),
               ElevatedButton(
                 onPressed: (){
-                  Navigator.of(this.context).pushReplacementNamed('/homepage');
+                  signIn();
                 },
                 child: Text('Sign in')
               )
@@ -71,5 +72,20 @@ class _LoginPageState extends State<LoginPage>{
         )
       )
     );
+  }
+
+  Future<void> signIn() async {
+    final formState = _formKey.currentState;
+    if (formState!.validate()){
+      formState.save();
+      try{
+        print(_email);
+        print(_password);
+        UserCredential user = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
+        Navigator.of(this.context).pushReplacementNamed('/homepage');
+      } catch(e){
+        print(e.toString());
+      }
+    }
   }
 }
