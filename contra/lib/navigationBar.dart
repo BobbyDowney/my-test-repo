@@ -16,23 +16,23 @@ class NavigationBar extends StatelessWidget {
   Widget build(BuildContext context){
     return BottomNavigationBar(
       currentIndex: currentIndex, // this will be set when a new tab is tapped
-      onTap: (index) => {
+      onTap: (index) {
         if (index != currentIndex){
-          Navigator.pushReplacementNamed(context, tabs[index])
+          Navigator.pushReplacementNamed(context, tabs[index]);
         }
       },
       items: [
         BottomNavigationBarItem(
           icon: new Icon(Icons.home),
-          title: new Text('Home'),
+          label: 'Home',
         ),
         BottomNavigationBarItem(
           icon: new Icon(Icons.search),
-          title: new Text('User Search'),
+          label: 'User Search',
         ),
         BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            title: Text('Profile')
+            label: 'Profile'
         )
       ],
     );
