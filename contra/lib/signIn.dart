@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
-
-import 'navigationBar.dart';
-import 'route_generator.dart';
+import 'authentication_service.dart';
 
 class SignInScreen extends StatefulWidget {
   SignInScreen({Key? key}) : super(key: key);
@@ -81,9 +79,7 @@ class _LoginPageState extends State<LoginPage>{
     if (formState!.validate()){
       formState.save();
       try{
-        print(_email);
-        print(_password);
-        UserCredential user = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
+        context.read<AuthenticationService>().signIn(email: _email, password:_password);
         Navigator.of(this.context).pushReplacementNamed('/homepage');
       } catch(e){
         print(e.toString());
