@@ -21,7 +21,10 @@ class _ProfileScreenState extends State<ProfileScreen>{
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Profile page'),
+                  //Text('Profile page'),
+                  Text(firebaseUser!.email.toString()),
+                  //Text(firebaseUser.displayName.toString()),
+                  //Text(firebaseUser.phoneNumber.toString()),
                   Text(firebaseUser.toString()),
                   ElevatedButton(
                     child: Text('Log out'),
