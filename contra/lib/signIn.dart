@@ -33,41 +33,45 @@ class _LoginPageState extends State<LoginPage>{
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              TextFormField(
-                validator: (input) {
-                  if ((input == null)| (input!.isEmpty)) {
-                    return 'Please type your Email';
-                  }
-                },
-                onSaved: (input) => _email = input ?? '',
-                decoration: InputDecoration(
-                  labelText: 'Email'
-                )
-              ),
-              TextFormField(
+        child: FractionallySizedBox(
+          widthFactor: .8,
+          heightFactor: 1,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                TextFormField(
                   validator: (input) {
                     if ((input == null)| (input!.isEmpty)) {
-                      return 'Please type your Password';
+                      return 'Please type your Email';
                     }
                   },
-                  onSaved: (input) => _password = input ?? '',
+                  onSaved: (input) => _email = input ?? '',
                   decoration: InputDecoration(
-                      labelText: 'Password'
-                  ),
-                obscureText: true
-              ),
-              ElevatedButton(
-                onPressed: (){
-                  signIn();
-                },
-                child: Text('Sign in')
-              )
-            ]
+                    labelText: 'Email'
+                  )
+                ),
+                TextFormField(
+                    validator: (input) {
+                      if ((input == null)| (input!.isEmpty)) {
+                        return 'Please type your Password';
+                      }
+                    },
+                    onSaved: (input) => _password = input ?? '',
+                    decoration: InputDecoration(
+                        labelText: 'Password'
+                    ),
+                  obscureText: true
+                ),
+                ElevatedButton(
+                  onPressed: (){
+                    signIn();
+                  },
+                  child: Text('Sign in')
+                )
+              ]
+            ),
           ),
         )
       )
