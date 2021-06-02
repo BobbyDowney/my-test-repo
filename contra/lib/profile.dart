@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'navigationBar.dart';
@@ -31,12 +31,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 PickedFile? image =
                     await picker.getImage(source: ImageSource.gallery);
                 print(image!.path);
+
+                // Storing that image file
+                uploadProfilePicture(image.path, firebaseUser);
+
+                /*
+                // Getting files example
+                FirebaseStorage storage = FirebaseStorage.instanceFor(
+                    bucket: "gs://contra-dev-946ab.appspot.com");
+                Future<String> dURL = storage
+                    .ref()
+                    .child("user/profile/${firebaseUser!.uid}")
+                    .getDownloadURL();
+                */
+                //setState((){});
               }),
           //Text('Profile page'),
           Text(firebaseUser!.email.toString()),
           //Text(firebaseUser.displayName.toString()),
           //Text(firebaseUser.phoneNumber.toString()),
-          //Text(firebaseUser.toString()),
           ElevatedButton(
               child: Text('Log out'),
               onPressed: () {
@@ -45,5 +58,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
               })
         ])),
         bottomNavigationBar: NavigationBar(2));
+  }
+}
+
+Future<void> uploadProfilePicture(String filePath, User? firebaseUser) async {
+  File file = File(filePath);
+
+  try {
+    await FirebaseStorage.instance
+        .ref("user/profile/${firebaseUser!.uid}")
+        .putFile(file);
+  } on FirebaseException catch (e) {
+    // e.g, e.code == 'canceled'
   }
 }
