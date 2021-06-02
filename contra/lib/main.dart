@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
               create: (_) => AuthenticationService(FirebaseAuth.instance)
           ),
           StreamProvider(
-            initialData: null,
+              initialData: null,
               create: (context) =>
               context
                   .read<AuthenticationService>()
@@ -37,13 +37,6 @@ class MyApp extends StatelessWidget {
             home: AuthenticationWrapper(),
             onGenerateRoute: RouteGenerator.generateRoute
         )
-    return MaterialApp(
-      title: 'Contra',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      initialRoute: '/homepage',
-        onGenerateRoute: RouteGenerator.generateRoute
     );
   }
 }
