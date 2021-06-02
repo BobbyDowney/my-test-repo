@@ -66,6 +66,7 @@ class _LoginPageState extends State<LoginPage>{
                 ),
                 SizedBox(height: 30),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     ElevatedButton(
                       onPressed: (){
@@ -73,6 +74,11 @@ class _LoginPageState extends State<LoginPage>{
                       },
                       child: Text('Log in')
                     ),
+                    SizedBox(width: 20),
+                    Text('or'),
+                    TextButton(
+                        child: Text('Sign up'),
+                        onPressed: (){})
                   ]
                 )
               ]
