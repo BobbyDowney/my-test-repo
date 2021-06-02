@@ -37,6 +37,13 @@ class MyApp extends StatelessWidget {
             home: AuthenticationWrapper(),
             onGenerateRoute: RouteGenerator.generateRoute
         )
+    return MaterialApp(
+      title: 'Contra',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      initialRoute: '/homepage',
+        onGenerateRoute: RouteGenerator.generateRoute
     );
   }
 }
