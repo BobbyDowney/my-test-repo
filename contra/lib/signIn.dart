@@ -33,14 +33,14 @@ class _LoginPageState extends State<LoginPage>{
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: FractionallySizedBox(
-          widthFactor: .8,
-          heightFactor: 1,
-          child: Form(
-            key: _formKey,
+        child: Form(
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                Text('Log in', style: TextStyle(fontSize: 40)),
                 TextFormField(
                   validator: (input) {
                     if ((input == null)| (input!.isEmpty)) {
@@ -64,11 +64,16 @@ class _LoginPageState extends State<LoginPage>{
                     ),
                   obscureText: true
                 ),
-                ElevatedButton(
-                  onPressed: (){
-                    signIn();
-                  },
-                  child: Text('Sign in')
+                SizedBox(height: 30),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: (){
+                        signIn();
+                      },
+                      child: Text('Log in')
+                    ),
+                  ]
                 )
               ]
             ),
