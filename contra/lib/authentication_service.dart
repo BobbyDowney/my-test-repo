@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 
 //Below class was copied from Robert Brunhage's tutorial (https://github.com/RobertBrunhage/flutter_firebase_auth_tutorial/blob/master/lib/authentication_service.dart)
 class AuthenticationService {
@@ -44,7 +45,7 @@ class AuthenticationService {
 
   //Important info:
   // iOS bundle identifier: com.example.contra
-  // android bundle identifier
+  // android bundle identifier: com.example.contra
 
   Future<void> signUpWithEmailAndLink({required String email}) async {
     var signupLinkResults =  await _firebaseAuth.sendSignInLinkToEmail(
@@ -59,5 +60,23 @@ class AuthenticationService {
             handleCodeInApp: true)
     );
     return signupLinkResults;
+  }
+
+  Future<void> getLink() async {
+    final PendingDynamicLinkData? data = await FirebaseDynamicLinks.instance.getInitialLink();
+    if (data?.link != null) {
+      print(data?.link);
+    }
+    FirebaseDynamicLinks.instance.onLink(
+      onSuccess: (PendingDynamicLinkData? dynamicLink) async {
+        final Uri? deepLink = dynamicLink?.link;
+        print(deepLink);
+        return deepLink;
+      },
+      onError: (OnLinkErrorException e) async {
+        print('onLinkError');
+        print(e.message);
+      }
+    );
   }
 }
