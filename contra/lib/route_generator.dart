@@ -4,6 +4,7 @@ import 'profile.dart';
 import 'signIn.dart';
 import 'userSearch.dart';
 import 'homePage.dart';
+import 'signUp.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -11,6 +12,8 @@ class RouteGenerator {
     switch (settings.name) {
       case '/signin':
         return PageRouteBuilder(pageBuilder: (_, __, ___) => SignInScreen());
+      case '/signup':
+        return PageRouteBuilder(pageBuilder: (_, __, ___) => SignUpScreen());
       case '/homepage':
         return PageRouteBuilder(pageBuilder: (_, __, ___) => HomePageScreen());
       case '/usersearch':

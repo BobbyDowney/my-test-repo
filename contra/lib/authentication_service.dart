@@ -41,4 +41,23 @@ class AuthenticationService {
       return e.toString();
     }
   }
+
+  //Important info:
+  // iOS bundle identifier: com.example.contra
+  // android bundle identifier
+
+  Future<void> signUpWithEmailAndLink({required String email}) async {
+    var signupLinkResults =  await _firebaseAuth.sendSignInLinkToEmail(
+        email: email,
+        actionCodeSettings: ActionCodeSettings(
+            url: 'https://contragram.page.link/createaccount',
+            dynamicLinkDomain: "contragram.page.link",
+            androidPackageName: "com.example.contra",
+            androidInstallApp: true,
+            androidMinimumVersion: '1',
+            iOSBundleId: "com.example.contra",
+            handleCodeInApp: true)
+    );
+    return signupLinkResults;
+  }
 }

@@ -78,7 +78,9 @@ class _LoginPageState extends State<LoginPage>{
                     Text('or'),
                     TextButton(
                         child: Text('Sign up'),
-                        onPressed: (){})
+                        onPressed: (){
+                          Navigator.of(context).pushReplacementNamed('/signup');
+                        })
                   ]
                 )
               ]
@@ -94,7 +96,7 @@ class _LoginPageState extends State<LoginPage>{
     if (formState!.validate()){
       formState.save();
       try{
-        context.read<AuthenticationService>().signIn(email: _email, password:_password);
+        await context.read<AuthenticationService>().signIn(email: _email, password:_password);
         Navigator.of(this.context).pushReplacementNamed('/homepage');
       } catch(e){
         print(e.toString());
