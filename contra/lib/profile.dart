@@ -21,37 +21,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User?>();
-    getAvatarUrl(firebaseUser).then((value) {
-      setState(() {
-        _avatarUrl = value;
-      });
-    });
     return Scaffold(
         body: Center(
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Avatar(
-            avatarUrl: _avatarUrl,
-            onTap: () async {
-              ImagePicker picker = ImagePicker();
-              print("Selection");
-              PickedFile? image =
-                  await picker.getImage(source: ImageSource.gallery);
+          child: FutureBuilder(
+              future: getAvatarUrl(firebaseUser).then((value) {
+                _avatarUrl = value;
+                print("Set new value for profile info");
+              }),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done)
+                  return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Avatar(
+                          avatarUrl: _avatarUrl,
+                          onTap: () async {
+                            try {
+                              ImagePicker picker = ImagePicker();
+                              print("Selection");
+                              PickedFile? image = await picker.getImage(
+                                  source: ImageSource.gallery);
 
-              // Storing that image file
-              print("Picture picked");
-              uploadProfilePicture(image!.path, firebaseUser);
-              print("Uploaded picture");
-            },
-          ),
-          Text(firebaseUser!.email.toString()),
-          ElevatedButton(
-              child: Text('Log out'),
-              onPressed: () {
-                context.read<AuthenticationService>().signOut();
-                Navigator.of(context).pushReplacementNamed('/signin');
-              })
-        ])),
+                              // Storing that image file
+                              print("Picture picked");
+                              await uploadProfilePicture(
+                                  image!.path, firebaseUser);
+                              print("Uploaded picture");
+
+                              setState(() {});
+                            } catch (e) {
+                              print("Invalid Picture Selected, error $e");
+                            }
+                          },
+                        ),
+                        Text(firebaseUser!.email.toString()),
+                        ElevatedButton(
+                            child: Text('Log out'),
+                            onPressed: () {
+                              context.read<AuthenticationService>().signOut();
+                              Navigator.of(context)
+                                  .pushReplacementNamed('/signin');
+                            })
+                      ]);
+                else {
+                  return CircularProgressIndicator();
+                }
+              }),
+        ),
         bottomNavigationBar: NavigationBar(2));
   }
 }
