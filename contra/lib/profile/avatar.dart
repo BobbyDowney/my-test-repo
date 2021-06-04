@@ -1,13 +1,15 @@
 // Taken from Firebase Profile tutorial
 // https://github.com/md-weber/firebase_profile_tutorial/blob/part_2/lib/views/profile/avatar.dart
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class Avatar extends StatelessWidget {
-  final String? avatarUrl;
   final Function()? onTap;
+  final avatarUrl;
 
-  const Avatar({this.avatarUrl, this.onTap});
+  Avatar({this.avatarUrl, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class Avatar extends StatelessWidget {
               )
             : CircleAvatar(
                 radius: 50.0,
-                backgroundImage: NetworkImage(avatarUrl!),
+                backgroundImage: NetworkImage(avatarUrl),
               ),
       ),
     );

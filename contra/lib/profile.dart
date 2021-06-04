@@ -17,39 +17,34 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  String? _avatarUrl;
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User?>();
+    getAvatarUrl(firebaseUser).then((value) {
+      setState(() {
+        _avatarUrl = value;
+      });
+    });
     return Scaffold(
         body: Center(
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Avatar(
-              avatarUrl: null,
-              onTap: () async {
-                ImagePicker picker = ImagePicker();
-                PickedFile? image =
-                    await picker.getImage(source: ImageSource.gallery);
-                print(image!.path);
+            avatarUrl: _avatarUrl,
+            onTap: () async {
+              ImagePicker picker = ImagePicker();
+              print("Selection");
+              PickedFile? image =
+                  await picker.getImage(source: ImageSource.gallery);
 
-                // Storing that image file
-                uploadProfilePicture(image.path, firebaseUser);
-
-                /*
-                // Getting files example
-                FirebaseStorage storage = FirebaseStorage.instanceFor(
-                    bucket: "gs://contra-dev-946ab.appspot.com");
-                Future<String> dURL = storage
-                    .ref()
-                    .child("user/profile/${firebaseUser!.uid}")
-                    .getDownloadURL();
-                */
-                //setState((){});
-              }),
-          //Text('Profile page'),
+              // Storing that image file
+              print("Picture picked");
+              uploadProfilePicture(image!.path, firebaseUser);
+              print("Uploaded picture");
+            },
+          ),
           Text(firebaseUser!.email.toString()),
-          //Text(firebaseUser.displayName.toString()),
-          //Text(firebaseUser.phoneNumber.toString()),
           ElevatedButton(
               child: Text('Log out'),
               onPressed: () {
@@ -61,14 +56,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
+Future<String?> getAvatarUrl(User? firebaseUser) async {
+  // Check to see if they have a google profile image or some other one
+  // Overwrite with any image from our database
+  // if neither, return null for basic profile picture
+
+  // Making asumption that image has already been chosen
+  String? rval;
+  FirebaseStorage storage =
+      FirebaseStorage.instanceFor(bucket: "gs://contra-dev-946ab.appspot.com");
+  await storage
+      .ref()
+      .child("user/profile/${firebaseUser!.uid}")
+      .getDownloadURL()
+      .then((value) {
+    rval = value;
+  });
+
+  // if (firebasePicture != null) return firebasePicture;
+  // print("Should not run");
+  // if (firebaseUser.photoURL != null) return firebaseUser.photoURL;
+
+  return rval;
+}
+
 Future<void> uploadProfilePicture(String filePath, User? firebaseUser) async {
   File file = File(filePath);
 
   try {
-    await FirebaseStorage.instance
+    await FirebaseStorage.instanceFor(
+            bucket: "gs://contra-dev-946ab.appspot.com")
         .ref("user/profile/${firebaseUser!.uid}")
         .putFile(file);
+    print("Successfully put file");
   } on FirebaseException catch (e) {
-    // e.g, e.code == 'canceled'
+    print("Threw exception $e");
   }
 }
