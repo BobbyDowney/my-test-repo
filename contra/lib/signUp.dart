@@ -103,9 +103,13 @@ class _SignupPageState extends State<SignupPage>{
       formState.save();
       try{
         await context.read<AuthenticationService>().signUpWithEmailAndLink(email: _email);
+        // final PendingDynamicLinkData? data = await FirebaseDynamicLinks.instance.getInitialLink();
+        // print(data?.link);
+        // await context.read<AuthenticationService>().handleDynamicLink(data);
       } catch(e){
         print(e.toString());
       }
     }
   }
 }
+

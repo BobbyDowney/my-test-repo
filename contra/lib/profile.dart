@@ -47,7 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 //setState((){});
               }),
           //Text('Profile page'),
-          Text(firebaseUser!.email.toString()),
+          Text(firebaseUser?.email.toString() ?? ''),
           //Text(firebaseUser.displayName.toString()),
           //Text(firebaseUser.phoneNumber.toString()),
           ElevatedButton(

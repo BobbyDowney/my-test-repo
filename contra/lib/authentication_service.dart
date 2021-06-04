@@ -59,7 +59,17 @@ class AuthenticationService {
             iOSBundleId: "com.example.contra",
             handleCodeInApp: true)
     );
-    return signupLinkResults;
+    print('sent link to email');
+    var emailLink = 'https://contragram.page.link/createaccount';
+    if (_firebaseAuth.isSignInWithEmailLink('https://contragram.page.link/createaccount')){
+      print('signed in with email link');
+      try{
+        _firebaseAuth.signInWithEmailLink(email: email, emailLink: emailLink);
+      } on FirebaseAuthException catch (e){
+        print(e.toString());
+      }
+    }
+    print('did not sign in with email link...');
   }
 
   Future<void> getLink() async {
@@ -78,5 +88,28 @@ class AuthenticationService {
         print(e.message);
       }
     );
+  }
+  Future<void> handleDynamicLink(PendingDynamicLinkData? data) async {
+    Uri? deepLink = data?.link;
+
+    if (deepLink == null){
+      print('Deep link was null');
+      return;
+    }
+    else {
+      var actionCode = deepLink.queryParameters['oobCode'];
+      try{
+        await _firebaseAuth.checkActionCode(actionCode ?? '');
+        await _firebaseAuth.applyActionCode(actionCode ?? '');
+        print('action code successful!');
+        print('current user is ${_firebaseAuth.currentUser}');
+        _firebaseAuth.currentUser?.reload();
+      } on FirebaseAuthException catch (e) {
+        print('ERROR with actioncode in link');
+        print(e.code);
+      }
+    }
+
+
   }
 }
