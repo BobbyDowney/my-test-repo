@@ -1,8 +1,6 @@
 // Taken from Firebase Profile tutorial
 // https://github.com/md-weber/firebase_profile_tutorial/blob/part_2/lib/views/profile/avatar.dart
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class Avatar extends StatelessWidget {

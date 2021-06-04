@@ -10,14 +10,14 @@ class NavigationBar extends StatelessWidget {
   NavigationBar(this.currentIndex);
 
   final int currentIndex;
-  var tabs = ['/homepage', '/usersearch', '/profile'];
+  final tabs = ['/homepage', '/usersearch', '/profile'];
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return BottomNavigationBar(
       currentIndex: currentIndex, // this will be set when a new tab is tapped
       onTap: (index) {
-        if (index != currentIndex){
+        if (index != currentIndex) {
           Navigator.pushReplacementNamed(context, tabs[index]);
         }
       },
@@ -30,10 +30,7 @@ class NavigationBar extends StatelessWidget {
           icon: new Icon(Icons.search),
           label: 'User Search',
         ),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile'
-        )
+        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile')
       ],
     );
   }

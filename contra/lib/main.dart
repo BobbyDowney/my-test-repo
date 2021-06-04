@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'route_generator.dart';
 import 'authentication_service.dart';
@@ -21,23 +20,17 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           Provider<AuthenticationService>(
-              create: (_) => AuthenticationService(FirebaseAuth.instance)
-          ),
+              create: (_) => AuthenticationService(FirebaseAuth.instance)),
           StreamProvider(
               initialData: null,
               create: (context) =>
-              context
-                  .read<AuthenticationService>()
-                  .authStateChanges
-          )
+                  context.read<AuthenticationService>().authStateChanges)
         ],
         child: MaterialApp(
             title: 'Contra',
             theme: ThemeData(primarySwatch: Colors.blue),
             home: AuthenticationWrapper(),
-            onGenerateRoute: RouteGenerator.generateRoute
-        )
-    );
+            onGenerateRoute: RouteGenerator.generateRoute));
   }
 }
 
@@ -53,4 +46,3 @@ class AuthenticationWrapper extends StatelessWidget {
     return SignInScreen();
   }
 }
-
