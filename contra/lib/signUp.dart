@@ -30,8 +30,14 @@ class SignupPage extends StatefulWidget {
   _SignupPageState createState() => _SignupPageState();
 }
 class _SignupPageState extends State<SignupPage>{
-  late String _email, _invitecode;
+  late String _email, _invitecode, _emailcode;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState(){
+    super.initState();
+    handleDynamicLinks();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +101,32 @@ class _SignupPageState extends State<SignupPage>{
             )
         )
     );
+  }
+  Future handleDynamicLinks() async {
+    //STARTUP FROM DYNAMIC LINK LOGIC
+    //Get initial dynamic link if the app is started using the link
+    final PendingDynamicLinkData? data = await FirebaseDynamicLinks.instance.getInitialLink(); //equivalent to the authstatechanges() in authentication service
+
+    _handleDeepLink(data);
+
+    //INTO FOREGROUND FROM DYNAMIC LINK LOGIC
+    FirebaseDynamicLinks.instance.onLink(
+        onSuccess: (PendingDynamicLinkData? dynamicLinkData) async {
+          _handleDeepLink(dynamicLinkData);
+        },
+        onError: (OnLinkErrorException e) async {
+          print('Dynamic link failed: ${e.message}');
+        }
+    );
+  }
+
+  void _handleDeepLink(PendingDynamicLinkData? data) {
+    final Uri? deepLink = data?.link;
+    if (deepLink != null) {
+      print('_handleDeepLink | deepLink: $deepLink');
+      Provider.of<AuthenticationService>(context).checkLink(deepLink);
+    }
+
   }
 
   Future<void> signUpWithEmailLink() async {

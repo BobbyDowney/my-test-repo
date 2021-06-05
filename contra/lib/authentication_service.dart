@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'dart:math';
 
 //Below class was copied from Robert Brunhage's tutorial (https://github.com/RobertBrunhage/flutter_firebase_auth_tutorial/blob/master/lib/authentication_service.dart)
 class AuthenticationService {
@@ -70,6 +71,9 @@ class AuthenticationService {
       }
     }
     print('did not sign in with email link...');
+  }
+  Future<void> checkLink({required String link, required String code}) async {
+
   }
 
   Future<void> getLink() async {
