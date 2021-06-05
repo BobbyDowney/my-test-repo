@@ -120,11 +120,12 @@ class _SignupPageState extends State<SignupPage>{
     );
   }
 
-  void _handleDeepLink(PendingDynamicLinkData? data) {
+  Future<void> _handleDeepLink(PendingDynamicLinkData? data) async {
     final Uri? deepLink = data?.link;
     if (deepLink != null) {
       print('_handleDeepLink | deepLink: $deepLink');
-      Provider.of<AuthenticationService>(context).checkLink(deepLink);
+      await Provider.of<AuthenticationService>(context, listen: false)
+          .checkLink(deepLink: deepLink, emailCode: _emailcode);
     }
 
   }
@@ -134,7 +135,11 @@ class _SignupPageState extends State<SignupPage>{
     if (formState!.validate()){
       formState.save();
       try{
-        await context.read<AuthenticationService>().signUpWithEmailAndLink(email: _email);
+        String code = await context.read<AuthenticationService>().signUpWithEmailAndLink(email: _email);
+        setState(() {
+          _emailcode = code;
+        });
+        print('Email code: ${_emailcode}');
         // final PendingDynamicLinkData? data = await FirebaseDynamicLinks.instance.getInitialLink();
         // print(data?.link);
         // await context.read<AuthenticationService>().handleDynamicLink(data);

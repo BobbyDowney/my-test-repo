@@ -44,15 +44,22 @@ class AuthenticationService {
     }
   }
 
+  String generateRandomString(int len) {
+    var r = Random();
+    const _chars = '_AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    return List.generate(len, (index) => _chars[r.nextInt(_chars.length)]).join();
+  }
+
   //Important info:
   // iOS bundle identifier: com.example.contra
   // android bundle identifier: com.example.contra
 
-  Future<void> signUpWithEmailAndLink({required String email}) async {
-    var signupLinkResults =  await _firebaseAuth.sendSignInLinkToEmail(
+  Future<String> signUpWithEmailAndLink({required String email}) async {
+    String code = generateRandomString(6);
+    var signupLinkResults = await _firebaseAuth.sendSignInLinkToEmail(
         email: email,
         actionCodeSettings: ActionCodeSettings(
-            url: 'https://contragram.page.link/createaccount',
+            url: 'https://contragram.page.link/createaccount/${code}',
             dynamicLinkDomain: "contragram.page.link",
             androidPackageName: "com.example.contra",
             androidInstallApp: true,
@@ -61,19 +68,41 @@ class AuthenticationService {
             handleCodeInApp: true)
     );
     print('sent link to email');
-    var emailLink = 'https://contragram.page.link/createaccount';
-    if (_firebaseAuth.isSignInWithEmailLink('https://contragram.page.link/createaccount')){
-      print('signed in with email link');
-      try{
-        _firebaseAuth.signInWithEmailLink(email: email, emailLink: emailLink);
-      } on FirebaseAuthException catch (e){
-        print(e.toString());
-      }
-    }
-    print('did not sign in with email link...');
+    print(code);
+    return code;
+  // var emailLink = 'https://contragram.page.link/createaccount';
+  // if (_firebaseAuth.isSignInWithEmailLink('https://contragram.page.link/createaccount')){
+  //   print('signed in with email link');
+  //   try{
+  //     _firebaseAuth.signInWithEmailLink(email: email, emailLink: emailLink);
+  //   } on FirebaseAuthException catch (e){
+  //     print(e.toString());
+  //   }
+  // }
+  // print('did not sign in with email link...');
   }
-  Future<void> checkLink({required String link, required String code}) async {
+  Future<void> checkLink({required Uri deepLink, required String emailCode}) async {
+    var actionCode = deepLink.queryParameters['oobCode'];
+    var continueUrl = deepLink.queryParameters['continueUrl'];
+    print('code returned: $emailCode');
+    print('action code:, $actionCode');
+    print('continueUrl: $continueUrl');
+    print(deepLink.queryParameters);
 
+    try{
+      if (_firebaseAuth.isSignInWithEmailLink(deepLink.toString())){
+        print('is sign in with email link');
+      } else {
+        print('is not sign in with email link');
+      }
+      var res2 = await _firebaseAuth.checkActionCode(actionCode ?? '');
+      print('later result of firebase check: ${res2}');
+      print(_firebaseAuth.currentUser);
+      await _firebaseAuth.applyActionCode(actionCode ?? '');
+      _firebaseAuth.currentUser!.reload();
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
   }
 
   Future<void> getLink() async {
@@ -82,15 +111,15 @@ class AuthenticationService {
       print(data?.link);
     }
     FirebaseDynamicLinks.instance.onLink(
-      onSuccess: (PendingDynamicLinkData? dynamicLink) async {
-        final Uri? deepLink = dynamicLink?.link;
-        print(deepLink);
-        return deepLink;
-      },
-      onError: (OnLinkErrorException e) async {
-        print('onLinkError');
-        print(e.message);
-      }
+        onSuccess: (PendingDynamicLinkData? dynamicLink) async {
+          final Uri? deepLink = dynamicLink?.link;
+          print(deepLink);
+          return deepLink;
+        },
+        onError: (OnLinkErrorException e) async {
+          print('onLinkError');
+          print(e.message);
+        }
     );
   }
   Future<void> handleDynamicLink(PendingDynamicLinkData? data) async {
@@ -113,7 +142,5 @@ class AuthenticationService {
         print(e.code);
       }
     }
-
-
   }
 }
